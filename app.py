@@ -1,6 +1,12 @@
+
 """
 Main application entry point
 """
+
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 import warnings
 import os
 
