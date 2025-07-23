@@ -1,29 +1,22 @@
-"""
-Content tabs functionality for displaying scraped content
-"""
 import streamlit as st
 from styling import create_icon_header
 from chat_interface import handle_chat_interaction
 
 
 def create_content_tabs(text_content, page_name):
-    """Create and handle the main content tabs"""
     # Create tabs for different sections
     tab1, tab2, tab3 = st.tabs(["💬 Chat", "📄 Content", "📥 Download"])
     
     with tab1:
         _handle_chat_tab()
-    
     with tab2:
         _handle_content_tab(text_content)
-    
     with tab3:
         _handle_download_tab(text_content, page_name)
 
 
 def _handle_chat_tab():
-    """Handle the chat tab content"""
-    # Chat interface (only show if chat system is ready)
+    # Chat interface 
     if hasattr(st.session_state, 'qa_chain') and st.session_state.qa_chain:
         handle_chat_interaction()
     else:
@@ -31,7 +24,6 @@ def _handle_chat_tab():
 
 
 def _handle_content_tab(text_content):
-    """Handle the content preview tab"""
     st.markdown(create_icon_header("fas fa-file-alt", "Text Content"), unsafe_allow_html=True)
     
     # Initialize display option in session state if not exists
@@ -46,7 +38,6 @@ def _handle_content_tab(text_content):
         key='display_option'
     )
     
-    # Display text based on option
     if "Preview" in st.session_state.display_option:
         words = text_content.split()
         preview_text = ' '.join(words[:500])
@@ -69,7 +60,6 @@ def _handle_content_tab(text_content):
 
 
 def _handle_download_tab(text_content, page_name):
-    """Handle the download tab content"""
     st.markdown(create_icon_header("fas fa-cloud-download-alt", "Download Options"), unsafe_allow_html=True)
     
     # Prepare filename
