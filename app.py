@@ -1,8 +1,3 @@
-
-"""
-Main application entry point
-"""
-
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
@@ -10,8 +5,6 @@ sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import warnings
 import os
 
-
-# Suppress warnings at the start
 warnings.filterwarnings("ignore")
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
 
@@ -22,12 +15,8 @@ from content_tabs import create_content_tabs
 
 
 def main():
-    """Main application function"""
     setup_page_config()
-    
-    # Initialize session state variables
     initialize_session_state()
-    
     create_main_header()
     create_sidebar()
     
@@ -35,7 +24,6 @@ def main():
     handle_scraping(page_name, scrape_clicked)
     text_content, current_page = check_and_display_results()
     
-    # Display results if available
     if text_content and current_page:
         create_content_tabs(text_content, current_page)
 
