@@ -1,6 +1,3 @@
-"""
-RAG model for chat functionality with Wikipedia scraped content.
-"""
 from langchain.chains import RetrievalQA
 from langchain_groq import ChatGroq  
 from langchain_community.vectorstores import Chroma
@@ -18,7 +15,7 @@ def get_cached_embeddings():
     """Load embeddings model once and reuse it"""
     return HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
-# Converting the scraped text to document object
+# Scraped data to document object
 def convert_text_to_documents(text, topic_name):
     chunks = split_text(text)
     documents = []
@@ -34,7 +31,7 @@ def convert_text_to_documents(text, topic_name):
         documents.append(doc)
     return documents
 
-# Function to split text into manageable chunks
+# Chunking 
 def split_text(text, chunk_size=1000, chunk_overlap=200):
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
@@ -62,7 +59,7 @@ def populate_vector_store(text, topic_name):
         if existing['ids']:  # Data exists, reuse it
             return vector_store
     except:
-        pass  # No existing data, create new
+        pass  
     
     # Create new data
     documents = convert_text_to_documents(text, topic_name)
@@ -70,14 +67,12 @@ def populate_vector_store(text, topic_name):
     return vector_store
 
 def setup_rag_chain(vector_store):
-    # Load environment variables again to be sure
     load_dotenv()
     
     # Get API key
     api_key = os.getenv("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY", None)
     
     try:
-        # Initialize the Groq client with explicit API key
         client = ChatGroq(
             api_key=api_key,  
             model_name="llama-3.3-70b-versatile",  
@@ -86,7 +81,6 @@ def setup_rag_chain(vector_store):
     except Exception as e:
         raise
 
-    # Define the prompt template
     prompt_template = PromptTemplate(
         template= """You are a helpful assistant answering question based on the wikipedia content.
 
@@ -114,12 +108,10 @@ def setup_rag_chain(vector_store):
     return qa_chain
 
 def ask_question_langchain(topic, question):
-    # Scrape Wikipedia content
     content = scrape_wikipedia(topic)
     if not content:
         return "Sorry, couldn't find information about that topic."
     
-    # Setup RAG system
     vector_store = populate_vector_store(content, topic)
     qa_chain = setup_rag_chain(vector_store)
     
