@@ -27,7 +27,7 @@ def create_main_header():
     st.markdown("""
     <div class="icon-header">
         <i class="fas fa-book-open"></i>
-        <h1>Quick o Pedia AI</h1>
+        <h2>Quick o Pedia AI</h2>
     </div>
     """, unsafe_allow_html=True)
     
